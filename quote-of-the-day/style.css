@@ -1,0 +1,208 @@
+﻿:root {
+  --bg: #f6f3ee;
+  --surface: #ffffff;
+  --text: #22201c;
+  --muted: #6b665e;
+  --border: #e2ddd3;
+  --accent: #8a4b2a;
+  --accent-hover: #6f3b20;
+  --accent-contrast: #ffffff;
+  --quote-mark: #d9c9b8;
+  --shadow: 0 6px 24px rgba(40, 30, 20, 0.08);
+  --focus: #1d5fd1;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14130f;
+    --surface: #1f1d18;
+    --text: #efebe3;
+    --muted: #a39d92;
+    --border: #36322a;
+    --accent: #e0a279;
+    --accent-hover: #ebb690;
+    --accent-contrast: #1a1209;
+    --quote-mark: #4a4034;
+    --shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+    --focus: #8ab4ff;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+.qotd {
+  max-width: 640px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.qotd__header {
+  text-align: center;
+}
+
+.qotd__title {
+  margin: 0;
+  font-size: clamp(1.4rem, 5vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.qotd__date {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.qotd__card {
+  position: relative;
+  margin: 0;
+  padding: 2rem 1.25rem 1.5rem;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+
+.qotd__card.is-changing {
+  animation: qotd-change 0.25s ease;
+}
+
+@keyframes qotd-change {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.qotd__text {
+  position: relative;
+  margin: 0;
+  padding-top: 1.25rem;
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+  font-size: clamp(1.25rem, 4.5vw, 1.9rem);
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.qotd__text::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.35rem;
+  left: -0.1rem;
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--quote-mark);
+  pointer-events: none;
+}
+
+.qotd__author {
+  margin: 1.25rem 0 0;
+  text-align: right;
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.qotd__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.qotd__button {
+  appearance: none;
+  padding: 0.65rem 1.25rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--accent-contrast);
+  background-color: var(--accent);
+  border: 2px solid var(--accent);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.qotd__button:hover {
+  background-color: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.qotd__button:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.qotd__button--ghost {
+  color: var(--accent);
+  background-color: transparent;
+}
+
+.qotd__button--ghost:hover {
+  color: var(--accent-contrast);
+}
+
+.qotd__footer {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+@media (min-width: 600px) {
+  .qotd {
+    padding: 3rem 1.5rem;
+  }
+
+  .qotd__card {
+    padding: 2.5rem 2.25rem 2rem;
+  }
+
+  .qotd__text::before {
+    font-size: 5rem;
+    top: -0.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qotd__card,
+  .qotd__button {
+    transition: none;
+  }
+
+  .qotd__card.is-changing {
+    animation: qotd-fade 0.15s linear;
+  }
+}
+
+@keyframes qotd-fade {
+  from {
+    opacity: 0;
+  }
+}

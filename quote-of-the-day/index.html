@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quote of the Day</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="qotd">
+    <header class="qotd__header">
+      <h1 class="qotd__title">Quote of the Day</h1>
+      <p class="qotd__date" id="qotd-date"></p>
+    </header>
+
+    <figure class="qotd__card" id="qotd-card">
+      <blockquote class="qotd__text" id="qotd-text"></blockquote>
+      <figcaption class="qotd__author" id="qotd-author"></figcaption>
+    </figure>
+
+    <div class="qotd__actions">
+      <button type="button" class="qotd__button" id="qotd-next">Another quote</button>
+      <button type="button" class="qotd__button qotd__button--ghost" id="qotd-today" hidden>Back to today's</button>
+    </div>
+
+    <footer class="qotd__footer">Built by Claude subagents in the Playground</footer>
+  </main>
+  <script src="quotes.js"></script>
+</body>
+</html>
