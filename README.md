@@ -6,7 +6,7 @@ The app lives in [`quote-of-the-day/`](quote-of-the-day/). See [`SPEC.md`](quote
 
 ## Open it
 
-- **Online:** https://alexthoc.github.io/quote-of-the-day/
+- **Online:** https://alexthoc.github.io/QuoteOfTheDay/
 - **Locally:** open `quote-of-the-day/index.html` straight in a browser, no server needed.
 
 ## How it's published
