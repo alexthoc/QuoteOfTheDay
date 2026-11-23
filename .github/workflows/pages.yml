@@ -1,8 +1,11 @@
-name: Deploy Playground to GitHub Pages
+name: Deploy Quote of the Day to GitHub Pages
 
 on:
   push:
     branches: [main]
+    paths:
+      - "quote-of-the-day/**"
+      - ".github/workflows/pages.yml"
   workflow_dispatch:
 
 permissions:
@@ -25,6 +28,6 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: quote-of-the-day
       - id: deployment
         uses: actions/deploy-pages@v4
