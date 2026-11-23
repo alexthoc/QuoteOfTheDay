@@ -20,7 +20,7 @@ A single static page that shows one quote per calendar day, with a button to see
       <p class="qotd__date" id="qotd-date"><!-- e.g. "Sunday, 15 November 2026" --></p>
     </header>
 
-    <figure class="qotd__card" id="qotd-card">
+    <figure class="qotd__card" id="qotd-card" aria-live="polite" aria-atomic="true">
       <blockquote class="qotd__text" id="qotd-text"></blockquote>
       <figcaption class="qotd__author" id="qotd-author"></figcaption>
     </figure>
@@ -41,12 +41,14 @@ A single static page that shows one quote per calendar day, with a button to see
 ## Behaviour (`quotes.js`)
 
 - `const QUOTES = [...]` — **at least 20** objects `{ text, author }`. Use only public-domain or very widely attributed short quotes (e.g. Seneca, Marcus Aurelius, Confucius, Lao Tzu, Benjamin Franklin, Mark Twain, Ada Lovelace). No song lyrics.
-- **Daily quote:** index = days since 1970-01-01 in the viewer's local time, modulo `QUOTES.length`. Same quote all day, changes at local midnight.
+- **Daily quote:** index = days since 1970-01-01 in the viewer's local time, modulo `QUOTES.length`. Same quote all day, changes at local midnight, including while the page is left open: at local midnight (and when the tab becomes visible or focused again) update `#qotd-date`, and if the daily quote is showing, switch to the new day's quote. A random quote the viewer is reading stays put.
 - On load: fill `#qotd-date` with today's date via `toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })`, then show the daily quote.
 - Author is rendered as `— Author` (em dash + space).
 - `#qotd-next`: show a random quote that differs from the one currently shown.
 - `#qotd-today`: show the daily quote again. Hidden (`hidden` attribute) while the daily quote is showing; visible otherwise.
-- When the quote changes, toggle the class `is-changing` on `#qotd-card` for ~250 ms so CSS can animate it (remove then re-add; use `setTimeout`).
+- When the quote changes, toggle the class `is-changing` on `#qotd-card` for ~250 ms so CSS can animate it (remove then re-add; use `setTimeout`). Not on the first render at page load.
+- `#qotd-card` is a polite live region (`aria-live="polite" aria-atomic="true"`) so screen readers announce quote changes.
+- Files are UTF-8 without a byte-order mark.
 - Set text with `textContent` (never `innerHTML`).
 
 ## Styling (`style.css`)
