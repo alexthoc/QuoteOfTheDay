@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
   'use strict';
 
   const QUOTES = [
@@ -37,23 +37,29 @@
 
   let currentIndex = -1;
   let changeTimer = null;
+  let midnightTimer = null;
+  let shownDay = null;
+
+  // Local calendar day number: use local Y/M/D as UTC so DST doesn't skew it.
+  function dayNumber(date) {
+    return Math.floor(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 86400000);
+  }
 
   function dailyIndex() {
-    const now = new Date();
-    // Local calendar day number: use local Y/M/D as UTC so DST doesn't skew it.
-    const days = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
+    const days = dayNumber(new Date());
     return ((days % QUOTES.length) + QUOTES.length) % QUOTES.length;
   }
 
-  function show(index) {
+  function show(index, animate) {
     const quote = QUOTES[index];
     currentIndex = index;
     textEl.textContent = quote.text;
-    authorEl.textContent = '— ' + quote.author;
+    authorEl.textContent = '\u2014 ' + quote.author;
     todayBtn.hidden = index === dailyIndex();
 
     cardEl.classList.remove('is-changing');
     clearTimeout(changeTimer);
+    if (animate === false) return;
     // Force reflow so the class re-add restarts the animation.
     void cardEl.offsetWidth;
     cardEl.classList.add('is-changing');
@@ -71,12 +77,45 @@
     return i;
   }
 
-  dateEl.textContent = new Date().toLocaleDateString(undefined, {
-    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
-  });
+  function renderDate(now) {
+    dateEl.textContent = now.toLocaleDateString(undefined, {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+    });
+  }
+
+  // Called on load, at local midnight, and whenever the page becomes visible
+  // again (timers are throttled in background tabs and paused during sleep).
+  function checkDay() {
+    const now = new Date();
+    const today = dayNumber(now);
+    if (today !== shownDay) {
+      const wasDaily = shownDay === null || todayBtn.hidden;
+      shownDay = today;
+      renderDate(now);
+      if (wasDaily) {
+        // Viewer was on the daily quote: move them to the new day's quote.
+        show(dailyIndex(), currentIndex !== -1);
+      } else {
+        // Viewer is browsing another quote: keep it, just refresh the button.
+        todayBtn.hidden = currentIndex === dailyIndex();
+      }
+    }
+    scheduleMidnight(now);
+  }
+
+  function scheduleMidnight(now) {
+    clearTimeout(midnightTimer);
+    // new Date(y, m, d + 1) is next local midnight, DST-safe.
+    const next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    midnightTimer = setTimeout(checkDay, next - now + 500);
+  }
 
   nextBtn.addEventListener('click', function () { show(randomOther()); });
   todayBtn.addEventListener('click', function () { show(dailyIndex()); });
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) checkDay();
+  });
+  window.addEventListener('focus', checkDay);
 
-  show(dailyIndex());
+  checkDay();
 })();
